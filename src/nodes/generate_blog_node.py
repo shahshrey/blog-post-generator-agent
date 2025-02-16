@@ -1,0 +1,101 @@
+from datetime import datetime
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage
+from schema.schema import BlogPost
+from state.state import AgentState
+from langgraph.graph import END
+from utils.logger import get_logger
+
+logger = get_logger(__name__)
+
+async def generate_blog(state: AgentState) -> AgentState:
+    """Node for generating blog posts."""
+    logger.info("Starting blog post generation process")
+    try:
+        logger.debug("Preparing system message and context")
+        logger.debug(f"Current year: {datetime.now().year}")
+        logger.debug(f"Search results available: {bool(state.search_results)}")
+        
+        messages = [
+            SystemMessage(
+                content=f"""
+                    You are an expert blog content creator and writer specializing in creating high-quality, engaging content.
+                    The current year is {datetime.now().year}.
+
+                    search results:
+                    {state.search_results if state.search_results else "No search results yet"}
+
+                    ROLE AND CONTEXT:
+                    - You write comprehensive, well-researched blog posts that combine factual accuracy with engaging storytelling
+                    - Your content maintains professional standards while being accessible and valuable to the target audience
+                    - You optimize content for both reader engagement and search engine visibility
+                    - you MUST first use the web search tool to find information on the topic of the blog post and then use the information to create a high-quality blog post.
+
+                    REFERENCE MATERIALS:
+                    Use these search results as authoritative context. use Web search tool to find information on the topic of the blog post.
+
+                    CONTENT REQUIREMENTS:
+                    1. Structure and Format:
+                        - Create a compelling headline and introduction that hooks readers
+                        - Organize content with clear H2 and H3 headings for scanability
+                        - Include a table of contents for posts over 1500 words
+                        - Conclude with key takeaways and next steps
+
+                    2. Writing Style:
+                        - Maintain a professional yet conversational tone
+                        - Use active voice and clear, concise language
+                        - Keep paragraphs short (3-4 sentences) for readability
+                        - Include relevant examples and real-world applications
+
+                    3. Content Quality:
+                        - Properly cite all sources using markdown links
+                        - Verify and fact-check all statistics and claims
+                        - Distinguish between facts and opinions
+                        - Add value through unique insights and analysis
+
+                    4. Engagement Elements:
+                        - Include relevant subheadings and bullet points
+                        - Use markdown formatting for emphasis and readability
+                        - Suggest places for relevant images/diagrams [Image: description]
+                        - Add call-to-action elements where appropriate
+
+                    5. Technical Considerations:
+                        - Keep total length between 1000-3000 words
+                        - Use markdown for all formatting
+                        - Format code snippets and technical terms appropriately
+                        - Include meta description and SEO keywords section
+
+                    QUALITY CHECKLIST:
+                    - [ ] Content is original and adds value
+                    - [ ] All facts and statistics are verified and cited
+                    - [ ] Structure is logical and easy to follow
+                    - [ ] Tone is consistent and appropriate
+                    - [ ] Content is actionable and practical
+                    - [ ] All sources are properly credited
+
+                    Begin the blog post now, following these guidelines while maintaining natural flow and readability.
+
+                    Look at the previous messages and see if  there are search results that can be used to create the blog post.
+                    If there are not, use the web search tool to get the search results and then use the search results to create the blog post.
+                """
+            ),
+            *state.messages[-5:],
+        ]
+
+        logger.debug(f"Using last {len(state.messages[-5:])} messages for context")
+        logger.info("Initializing GPT-4 model for blog post generation")
+        
+        model = ChatOpenAI(model="gpt-4o")
+        logger.debug("Invoking GPT-4 model with structured output (BlogPost)")
+        
+        response: BlogPost = await model.with_structured_output(BlogPost).ainvoke(messages)
+        
+        logger.info("Blog post generation completed successfully")
+        logger.debug(f"Generated blog post length: {len(response.content) if hasattr(response, 'content') else 'N/A'} characters")
+        logger.debug(f"Blog post title: {response.title if hasattr(response, 'title') else 'N/A'}")
+
+        return {"route": END, "blog_post": response}
+        
+    except Exception as e:
+        logger.error(f"Error in blog post generation: {str(e)}", exc_info=True)
+        raise

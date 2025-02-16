@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "react-agent"
+version = "0.1.0"
+description = "A blog post generator using ReAct agents"
+requires-python = ">=3.9"
+dependencies = [
+    "python-dotenv",
+    "langchain-core",
+    "langchain-openai",
+    "langgraph>=0.2.39",
+    "langgraph-checkpoint>=2.0.2",
+    "langgraph-checkpoint-postgres>=2.0.2",
+    "pydantic"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/"] 
