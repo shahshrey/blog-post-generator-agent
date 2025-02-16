@@ -1,14 +1,14 @@
-from langgraph.graph.graph import CompiledGraph
-from langgraph.graph import END, StateGraph
+import logging
 
+from dotenv import load_dotenv
+from langgraph.graph import END, StateGraph
+from langgraph.graph.graph import CompiledGraph
+from nodes.chat_node import chat_with_user
+from nodes.generate_blog_node import generate_blog
+from nodes.router_node import goto_route, router
+from nodes.web_search_node import search_web
 from schema.nodes import CHAT, GENERATE_BLOG, ROUTER, WEB_SEARCH
 from state.state import AgentState
-import logging
-from nodes.router_node import goto_route, router
-from nodes.generate_blog_node import generate_blog
-from nodes.chat_node import chat_with_user
-from nodes.web_search_node import search_web
-from dotenv import load_dotenv
 
 _ = load_dotenv()
 
@@ -53,10 +53,8 @@ def build_graph() -> CompiledGraph:
         },
     )
 
+    graph.add_edge(WEB_SEARCH, GENERATE_BLOG)
     graph.add_edge(GENERATE_BLOG, END)
-
-    graph.add_edge(WEB_SEARCH, END)
-
     graph.add_edge(CHAT, END)
 
     logger.info("State graph built successfully")
@@ -69,8 +67,5 @@ _graph = None
 def get_blog_post_generator_graph() -> CompiledGraph:
     """Get the compiled graph, creating it if necessary."""
     global _graph
-    if _graph is not None:
-        return _graph
-
     _graph = build_graph()
     return _graph

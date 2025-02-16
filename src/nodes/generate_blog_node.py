@@ -1,29 +1,26 @@
 from datetime import datetime
-from langchain_openai import ChatOpenAI
+
 from langchain_core.messages import SystemMessage
+from langchain_openai import ChatOpenAI
+from langgraph.graph import END
 from schema.schema import BlogPost
 from state.state import AgentState
-from langgraph.graph import END
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+
 
 async def generate_blog(state: AgentState) -> AgentState:
     """Node for generating blog posts."""
     logger.info("Starting blog post generation process")
     try:
-        logger.debug("Preparing system message and context")
-        logger.debug(f"Current year: {datetime.now().year}")
-        logger.debug(f"Search results available: {bool(state.search_results)}")
-        
+        search_results = state.search_results.search_results
+        search_results_str = "\n\n".join([f"## {result.question}\n\n{result.search_result}" for result in search_results])
         messages = [
             SystemMessage(
                 content=f"""
                     You are an expert blog content creator and writer specializing in creating high-quality, engaging content.
                     The current year is {datetime.now().year}.
-
-                    search results:
-                    {state.search_results if state.search_results else "No search results yet"}
 
                     ROLE AND CONTEXT:
                     - You write comprehensive, well-researched blog posts that combine factual accuracy with engaging storytelling
@@ -73,29 +70,25 @@ async def generate_blog(state: AgentState) -> AgentState:
                     - [ ] Content is actionable and practical
                     - [ ] All sources are properly credited
 
-                    Begin the blog post now, following these guidelines while maintaining natural flow and readability.
+                    Use the following search results to create the blog post:
+                        {search_results_str if state.search_results else "No search results yet"}
 
-                    Look at the previous messages and see if  there are search results that can be used to create the blog post.
-                    If there are not, use the web search tool to get the search results and then use the search results to create the blog post.
+                    Begin the blog post now, following these guidelines while maintaining natural flow and readability.
                 """
             ),
             *state.messages[-5:],
         ]
 
-        logger.debug(f"Using last {len(state.messages[-5:])} messages for context")
         logger.info("Initializing GPT-4 model for blog post generation")
-        
+
         model = ChatOpenAI(model="gpt-4o")
-        logger.debug("Invoking GPT-4 model with structured output (BlogPost)")
-        
+
         response: BlogPost = await model.with_structured_output(BlogPost).ainvoke(messages)
-        
+
         logger.info("Blog post generation completed successfully")
-        logger.debug(f"Generated blog post length: {len(response.content) if hasattr(response, 'content') else 'N/A'} characters")
-        logger.debug(f"Blog post title: {response.title if hasattr(response, 'title') else 'N/A'}")
 
         return {"route": END, "blog_post": response}
-        
+
     except Exception as e:
         logger.error(f"Error in blog post generation: {str(e)}", exc_info=True)
         raise

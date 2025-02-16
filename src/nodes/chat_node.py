@@ -1,7 +1,8 @@
-from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage, AIMessage
-from state.state import AgentState
 import logging
+
+from langchain_core.messages import AIMessage, SystemMessage
+from langchain_openai import ChatOpenAI
+from state.state import AgentState
 
 logger = logging.getLogger(__name__)
 
@@ -20,4 +21,3 @@ async def chat_with_user(state: AgentState) -> AgentState:
     response = await model.ainvoke([system_message, *state.messages[-5:]])
 
     return {"messages": [AIMessage(content=response.content)]}
-

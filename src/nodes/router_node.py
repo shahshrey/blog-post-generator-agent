@@ -1,19 +1,20 @@
-from langchain_openai import ChatOpenAI
+from typing import Any
+
 from langchain_core.messages import SystemMessage
-from state.state import AgentState
-from schema.schema import AssessIntent
+from langchain_openai import ChatOpenAI
 from langgraph.graph import END
-from schema.nodes import GENERATE_BLOG, WEB_SEARCH, CHAT
-from utils.utils import format_log_content
+from schema.nodes import CHAT, GENERATE_BLOG, WEB_SEARCH
+from schema.schema import AssessIntent
+from state.state import AgentState
 from utils.logger import get_logger
 
 logger = get_logger(__name__)
+
 
 async def router_assessment(state: AgentState) -> AssessIntent:
     """Assess the user's intent and determine the next action."""
     logger.info("Starting router assessment")
     try:
-        logger.debug("Preparing system message with current state")
         system_message = SystemMessage(
             content=f"""
             You are a blog post writing assistant that helps users create high-quality blog posts.
@@ -34,30 +35,23 @@ async def router_assessment(state: AgentState) -> AssessIntent:
             """
         )
 
-        logger.debug(f"Using last {len(state.messages[-5:])} messages for assessment")
         model = ChatOpenAI(model="gpt-4o")
-        logger.debug("Invoking GPT-4 model for intent assessment")
-        
-        assessment = await model.with_structured_output(AssessIntent).ainvoke(
-            [system_message, *state.messages[-5:]]
-        )
+
+        assessment = await model.with_structured_output(AssessIntent).ainvoke([system_message, *state.messages[-5:]])
 
         logger.info(f"Router assessment complete: {assessment.dict()}")
-        logger.debug(f"Detailed assessment: {format_log_content(assessment.dict())}")
         return assessment
-        
+
     except Exception as e:
         logger.error(f"Error in router assessment: {str(e)}", exc_info=True)
         raise
 
 
-def goto_route(state: AgentState):
+def goto_route(state: AgentState) -> Any:
     """Determine if we should end or continue routing."""
-    logger.debug(f"Checking route state: {state.route}")
     if state.route == END or state.route == "__end__":
         logger.info("Routing to END state")
         return END
-    logger.debug(f"Continuing with route: {state.route}")
     return state.route
 
 
@@ -66,7 +60,7 @@ async def router(state: AgentState) -> AgentState:
     logger.info("Starting main router function")
     try:
         assessment = await router_assessment(state)
-        
+
         if assessment.generate_blog_post.boolean_value:
             logger.info("Routing to blog post generation")
             return {"route": GENERATE_BLOG}
@@ -76,7 +70,7 @@ async def router(state: AgentState) -> AgentState:
         else:
             logger.info("Routing to chat")
             return {"route": CHAT}
-            
+
     except Exception as e:
         logger.error(f"Error in main router: {str(e)}", exc_info=True)
         raise
