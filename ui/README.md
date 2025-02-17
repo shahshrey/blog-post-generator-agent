@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Blog Post Generator
+
+A modern web application built with Next.js that helps users generate engaging blog content using AI assistance. The project leverages CopilotKit for AI-powered content generation and features a clean, responsive interface.
+
+## Features
+
+- 🤖 AI-powered blog post generation
+- 💻 Real-time content preview
+- 🎨 Modern UI with Shadcn UI and Tailwind CSS
+- 🌙 Dark mode support
+- ⚡ Built with Next.js App Router and TypeScript
+- 🔄 State management with CopilotKit
+- 📱 Responsive design for all devices
+
+## Tech Stack
+
+- **Framework:** Next.js 15 with App Router
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS, Shadcn UI
+- **AI Integration:** CopilotKit
+- **Package Manager:** pnpm
+- **UI Components:** Radix UI
+- **Markdown:** React Markdown with syntax highlighting
+- **Development:** Turbopack for fast refresh
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+3. Set up your environment variables:
+   Create a `.env.local` file in the root directory with your API keys.
+   OPENAI_API_KEY=
+   REMOTE_ACTION_URL=http://localhost:8000/copilotkit  
+
+4. Run the development server:
+   ```bash
+   pnpm dev
+   ```
+
+   The application will start using Turbopack for faster development experience.
+
+5. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Project Structure
+
+```
+src/
+├── app/              # Next.js App Router pages
+├── components/       # Reusable UI components
+├── types/           # TypeScript type definitions
+└── styles/          # Global styles and theme
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- The main page is in `src/app/page.tsx`
+- Blog post components are in `src/components/blog-post.tsx`
+- Type definitions are in `src/types/blog.ts`
+- Theme configuration is in `src/styles/theme.ts`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contributing
 
-## Learn More
+Contributions are welcome! Please feel free to submit a Pull Request.
 
-To learn more about Next.js, take a look at the following resources:
+## License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is licensed under the MIT License - see the LICENSE file for details.

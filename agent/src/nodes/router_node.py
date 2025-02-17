@@ -4,7 +4,7 @@ from langchain_core.messages import SystemMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END
 
-from src.schema.nodes import CHAT, GENERATE_BLOG, WEB_SEARCH
+from src.schema.nodes import CHAT, FEEDBACK, GENERATE_BLOG, WEB_SEARCH
 from src.schema.schema import AssessIntent
 from src.state.state import AgentState
 from src.utils.logger import get_logger
@@ -31,7 +31,7 @@ async def router_assessment(state: AgentState) -> AssessIntent:
             1. If we need to search for information (only if no search results exist)
             2. If we need to generate/modify a blog post (only if search results exist)
             3. If we should just chat with the user
-
+            4. If we need to update the blog post based on the user's feedback. If the user is providing feedback on the existing blog post, we need to update the blog post based on the feedback and not generate a new blog post.
             Provide your assessment following the AssessIntent schema.
             """
         )
@@ -65,6 +65,9 @@ async def router(state: AgentState) -> AgentState:
         if assessment.generate_blog_post.boolean_value:
             logger.info("Routing to blog post generation")
             return {"route": GENERATE_BLOG}
+        elif assessment.feedback.boolean_value:
+            logger.info("Routing to feedback")
+            return {"route": FEEDBACK}
         elif assessment.search_web.boolean_value:
             logger.info("Routing to web search")
             return {"route": WEB_SEARCH}

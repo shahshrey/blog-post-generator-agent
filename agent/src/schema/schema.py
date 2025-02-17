@@ -19,6 +19,8 @@ class ChatWithUser(ReasonedBoolean):
 class SearchWeb(ReasonedBoolean):
     pass
 
+class Feedback(ReasonedBoolean):
+    pass
 
 class AssessIntent(BaseModel):
     generate_blog_post: GenerateBlogPost = Field(
@@ -49,6 +51,14 @@ class AssessIntent(BaseModel):
         """
     )
 
+    feedback: Feedback = Field(
+        description="""
+        Whether to update the blog post based on the user's feedback.
+        Set to True if:
+        - They are providing feedback on the existing blog post
+        """
+    )
+
 
 class BlogPost(BaseModel):
     title: Optional[str] = Field(None, description="The title of the blog post")
@@ -56,9 +66,9 @@ class BlogPost(BaseModel):
 
 
 class SearchResult(BaseModel):
-    question: str = Field(description="The search question that was asked")
-    search_result: str = Field(description="The processed search result content")
+    question: Optional[str] = Field(None, description="The search question that was asked")
+    search_result: Optional[str] = Field(None, description="The processed search result content")
 
 
 class SearchResults(BaseModel):
-    search_results: List[SearchResult] = Field(description="List of search results with their corresponding questions")
+    search_results: Optional[List[SearchResult]] = Field(None, description="List of search results with their corresponding questions")
