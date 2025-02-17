@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -51,8 +51,8 @@ class AssessIntent(BaseModel):
 
 
 class BlogPost(BaseModel):
-    title: str = Field(description="The title of the blog post")
-    content: str = Field(description="The content of the blog post")
+    title: Optional[str] = Field(None, description="The title of the blog post")
+    content: Optional[str] = Field(None, description="The content of the blog post")
 
 
 class SearchResult(BaseModel):

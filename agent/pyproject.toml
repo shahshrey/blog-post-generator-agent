@@ -1,28 +1,26 @@
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[project]
+[tool.poetry]
 name = "blog-post-generator"
 version = "0.1.0"
-description = "A blog post generator using ReAct agents"
-requires-python = ">=3.9"
-dependencies = [
-    "python-dotenv",
-    "langchain-core",
-    "langchain-openai",
-    "langgraph>=0.2.39",
-    "langgraph-checkpoint>=2.0.2",
-    "langgraph-checkpoint-postgres>=2.0.2",
-    "pydantic",
-    "langgraph-cli[inmem]>=0.1.71",
-]
+description = "A blog post generator"
+authors = ["shrey shah <sshreyv@gmail.com>"]
+license = "MIT"
+packages = [{include = "src"}]
 
-[tool.hatch.build]
-packages = ["src"]
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+python-dotenv = "*"
+langchain-core = "*"
+langchain-openai = "*"
+langgraph = ">=0.2.39"
+langgraph-checkpoint = ">=2.0.2"
+langgraph-checkpoint-postgres = ">=2.0.2"
+pydantic = "*"
+langgraph-cli = {extras = ["inmem"], version = ">=0.1.71"}
+fastapi = ">=0.115.8"
+copilotkit = ">=0.1.38"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
+[tool.poetry.scripts]
+app = "src.app:main"
 
 [tool.black]
 line-length = 220

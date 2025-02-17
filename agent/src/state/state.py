@@ -12,7 +12,10 @@ from src.schema.schema import BlogPost, SearchResults
 def add_messages(left: Messages, right: Messages) -> Messages:
     """Wraps langchain's add_messages to add custom logic"""
     for message in right:
-        message.additional_kwargs["created_at"] = datetime.now().isoformat()
+        if hasattr(message, 'additional_kwargs'):
+            message.additional_kwargs["created_at"] = datetime.now().isoformat()
+        elif isinstance(message, dict) and "additional_kwargs" not in message:
+            message["additional_kwargs"] = {"created_at": datetime.now().isoformat()}
     return og_add_messages(left, right)
 
 
@@ -20,4 +23,4 @@ class AgentState(BaseModel):
     messages: Annotated[list[AnyMessage], add_messages] = Field(default=[])
     blog_post: BlogPost = Field(default_factory=BlogPost)
     route: Optional[str] = Field(default=None)
-    search_results: SearchResults = Field(default_factory=SearchResults)
+    search_results: SearchResults = Field(default_factory=lambda: SearchResults(search_results=[]))
