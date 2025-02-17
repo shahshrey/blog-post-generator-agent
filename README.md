@@ -70,8 +70,9 @@ stateDiagram-v2
 
 ### UI Setup
 
-1. Navigate to the UI directory:
+1. Clone the repo and Navigate to the UI directory:
    ```bash
+   git clone git@github.com:shahshrey/blog-post-generator-agent.git
    cd ui
    ```
 
