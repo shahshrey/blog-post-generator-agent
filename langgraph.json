@@ -1,0 +1,6 @@
+{
+    "dependencies": ["./src"],
+    "graphs": {
+      "blog-post-generator": "./src/graph/graph.py:graph"
+    }
+  }

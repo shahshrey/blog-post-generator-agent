@@ -2,7 +2,8 @@ import logging
 
 from langchain_core.messages import AIMessage, SystemMessage
 from langchain_openai import ChatOpenAI
-from state.state import AgentState
+
+from src.state.state import AgentState
 
 logger = logging.getLogger(__name__)
 

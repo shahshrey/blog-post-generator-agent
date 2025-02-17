@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "react-agent"
+name = "blog-post-generator"
 version = "0.1.0"
 description = "A blog post generator using ReAct agents"
 requires-python = ">=3.9"
@@ -14,11 +14,15 @@ dependencies = [
     "langgraph>=0.2.39",
     "langgraph-checkpoint>=2.0.2",
     "langgraph-checkpoint-postgres>=2.0.2",
-    "pydantic"
+    "pydantic",
+    "langgraph-cli[inmem]>=0.1.71",
 ]
 
+[tool.hatch.build]
+packages = ["src"]
+
 [tool.hatch.build.targets.wheel]
-packages = ["src/"]
+packages = ["src"]
 
 [tool.black]
 line-length = 220

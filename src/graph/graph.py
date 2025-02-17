@@ -3,12 +3,13 @@ import logging
 from dotenv import load_dotenv
 from langgraph.graph import END, StateGraph
 from langgraph.graph.graph import CompiledGraph
-from nodes.chat_node import chat_with_user
-from nodes.generate_blog_node import generate_blog
-from nodes.router_node import goto_route, router
-from nodes.web_search_node import search_web
-from schema.nodes import CHAT, GENERATE_BLOG, ROUTER, WEB_SEARCH
-from state.state import AgentState
+
+from src.nodes.chat_node import chat_with_user
+from src.nodes.generate_blog_node import generate_blog
+from src.nodes.router_node import goto_route, router
+from src.nodes.web_search_node import search_web
+from src.schema.nodes import CHAT, GENERATE_BLOG, ROUTER, WEB_SEARCH
+from src.state.state import AgentState
 
 _ = load_dotenv()
 
@@ -69,3 +70,6 @@ def get_blog_post_generator_graph() -> CompiledGraph:
     global _graph
     _graph = build_graph()
     return _graph
+
+
+graph = get_blog_post_generator_graph()

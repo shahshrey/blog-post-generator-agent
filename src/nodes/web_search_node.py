@@ -6,10 +6,11 @@ import requests
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from pydantic import BaseModel, Field
-from schema.nodes import GENERATE_BLOG
-from schema.schema import SearchResult, SearchResults
-from state.state import AgentState
-from utils.logger import get_logger
+
+from src.schema.nodes import GENERATE_BLOG
+from src.schema.schema import SearchResult, SearchResults
+from src.state.state import AgentState
+from src.utils.logger import get_logger
 
 logger = get_logger(__name__)
 

@@ -3,9 +3,10 @@ from datetime import datetime
 from langchain_core.messages import SystemMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END
-from schema.schema import BlogPost
-from state.state import AgentState
 from utils.logger import get_logger
+
+from src.schema.schema import BlogPost
+from src.state.state import AgentState
 
 logger = get_logger(__name__)
 

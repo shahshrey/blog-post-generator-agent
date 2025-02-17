@@ -5,7 +5,8 @@ from langchain_core.messages import AnyMessage
 from langgraph.graph.message import Messages
 from langgraph.graph.message import add_messages as og_add_messages
 from pydantic import BaseModel, Field
-from schema.schema import BlogPost, SearchResults
+
+from src.schema.schema import BlogPost, SearchResults
 
 
 def add_messages(left: Messages, right: Messages) -> Messages:
