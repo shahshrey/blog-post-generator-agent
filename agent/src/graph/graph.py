@@ -61,3 +61,9 @@ memory = MemorySaver()
 logger.info("State graph built successfully")
 graph = graph.compile(checkpointer=memory)
 
+def get_blog_post_generator_graph():
+    """
+    Returns the compiled blog post generator graph.
+    """
+    return graph
+
