@@ -18,7 +18,7 @@ pydantic = "*"
 langgraph-cli = {extras = ["inmem"], version = ">=0.1.71"}
 fastapi = ">=0.115.8"
 copilotkit = ">=0.1.38"
-
+uvicorn = ">=0.29.0"
 [tool.poetry.scripts]
 app = "src.app:main"
 

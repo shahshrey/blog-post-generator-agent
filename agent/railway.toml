@@ -1,9 +1,9 @@
 [build]
 builder = "nixpacks"
-buildCommand = "curl -sSL https://install.python-poetry.org | python3 - && poetry install --no-dev"
+buildCommand = "python -m pip install --upgrade pip && pip install -r <(poetry export --without-hashes --format=requirements.txt)"
 
 [deploy]
-startCommand = "cd /app && PYTHONPATH=/app PYTHONUNBUFFERED=1 poetry run uvicorn src.app:app --host 0.0.0.0 --port $PORT --log-level info"
+startCommand = "uvicorn src.app:app --host 0.0.0.0 --port $PORT --log-level info"
 healthcheckPath = "/health"
 healthcheckTimeout = 180
 restartPolicyType = "on_failure"
