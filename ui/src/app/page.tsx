@@ -5,26 +5,9 @@ import { CopilotChat } from "@copilotkit/react-ui";
 import "@copilotkit/react-ui/styles.css";
 import { BlogPost } from "@/components/blog-post";
 import { ErrorBoundary } from "@/components/error-boundary";
-import { type AgentState, type BlogPost as BlogPostType } from "@/types/blog";
+import { type AgentState } from "@/types/blog";
 import { THEME } from "@/styles/theme";
 import initialState from "./initial-state.json";
-
-// Helper to parse blog post from repr string
-const parseBlogPost = (repr: string): BlogPostType | null => {
-  try {
-    const match = repr.match(/BlogPost\(title='([^']*)', content="([^"]*)"\)/);
-    if (match) {
-      return {
-        title: match[1],
-        content: match[2].replace(/\\n/g, '\n')
-      };
-    }
-    return null;
-  } catch (error) {
-    console.error('Error parsing blog post:', error);
-    return null;
-  }
-};
 
 function MainContent() {
   const { state } = useCoAgent<AgentState>({
@@ -32,10 +15,7 @@ function MainContent() {
     initialState: initialState
   });
 
-  // Parse blog post from repr if available
-  const blogPost = state?.blog_post && (state.blog_post as BlogPostType & { repr?: string }).repr 
-    ? parseBlogPost((state.blog_post as BlogPostType & { repr: string }).repr) 
-    : null;
+  console.log(JSON.stringify(state, null, 2));
 
   return (
     <div 
@@ -44,11 +24,11 @@ function MainContent() {
     >
       {/* Main content area */}
       <div className="flex-1 overflow-y-auto p-4 mr-[400px]">
-        {blogPost && (
+        {state?.blog_post && (
           <div className="max-w-4xl mx-auto">
             <BlogPost 
-              title={blogPost.title}
-              content={blogPost.content}
+              title={state.blog_post.title}
+              content={state.blog_post.content}
               className="mb-8"
             />
           </div>
@@ -77,7 +57,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       <ErrorBoundary>
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="blog-post-generator" showDevConsole={false}>
+        <CopilotKit publicApiKey="ck_pub_fc9ab3f752f63a9fdad9698bc49fcf60" agent="blog-post-generator" showDevConsole={false}>
           <MainContent />
         </CopilotKit>
       </ErrorBoundary>
