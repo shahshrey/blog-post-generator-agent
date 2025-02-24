@@ -127,9 +127,10 @@ blog-post-generator/
 ├── ui/
 │   ├── src/
 │   │   ├── app/           # Next.js pages
-│   │   ├── components/    # UI components
-│   │   ├── types/        # TypeScript types
-│   │   └── styles/       # Global styles
+│   │   │   ├── components/    # UI components
+│   │   │   ├── types/        # TypeScript types
+│   │   │   └── styles/       # Global styles
+│   │   └── public/           # Static assets
 │   └── public/           # Static assets
 │
 ├── agent/
@@ -162,10 +163,99 @@ blog-post-generator/
    - Refine based on feedback
    - Present final content
 
-## 📝 License
+## 🤖 Prompt Engineering Approach
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+The prompt engineering strategy follows a systematic workflow:
 
-## 🤝 Contributing
+1. **Query Analysis**
+   - Break down user topics into discrete, searchable questions
+   - Identify key research areas and knowledge gaps
 
-Contributions are welcome! Please read our contributing guidelines for details on our code of conduct and the process for submitting pull requests.
+2. **Research Phase**
+   - Execute targeted web searches for each sub-question
+   - Aggregate and validate information from multiple sources
+
+3. **Content Generation**
+   - Transform research into structured blog content
+   - Apply Chain-of-Thought reasoning for logical flow
+   - Segment prompts into clear sections (Context, Requirements, Examples)
+
+4. **Iterative Refinement**
+   - Collect user feedback on generated content
+   - Implement targeted improvements based on feedback
+   - Validate changes against original requirements
+
+5. **Quality Assurance**
+   - Use LLM-based evaluation to assess content quality
+   - Verify alignment with user intent and requirements
+   - Ensure factual accuracy and coherence
+
+## 🧪 Testing
+
+### Running Tests
+
+Run the test using:
+```bash
+python test.py
+```
+
+### Test Coverage
+
+The test covers:
+- Blog post generation workflow
+- Content validation and feedback
+- State management
+
+Key test cases:
+- Generation with default prompts
+- Custom topic generation
+- Validation of generated content
+- Error handling for API failures
+- State persistence and recovery
+- Edge cases in content processing
+
+Testing Approach:
+- LLM as judge, we can add a lot more validations
+- Structured outputs validation
+- We can incorporate pytest and parameterize the tests for different scenarios and different prompts as well
+
+## Design Decisions
+- CopilotKit chosen for maintaining shared state between frontend and agent components
+- Next.js selected for LLM-friendly development and easier integration with Cursor
+- Blog posts rendered only after full generation for simplified frontend state management
+- Agent awareness of frontend state changes for effective user feedback processing
+- Conversational chatbot interface for natural user interaction
+
+## Edge Cases
+- Router node analyzes user intent and directs requests to specialized nodes
+- Single agent handles multiple use cases through router-based architecture
+- Better separation of concerns and workflow control compared to React-style agent approach
+- Enhanced handling of edge cases through specialized node processing
+
+## 🌐 Deployed Version
+
+Access the live demo at: https://blog-post-generator-indol.vercel.app/
+
+Note: The deployed version might experience initial loading delays due to cold starts on the free tier of Vercel and Railway.
+
+Example usage:
+```bash
+Send a message to the chatbot:
+"Write a blog post on the topic of 'The impact of AI on the future of work'"
+```
+
+## 🔐 Environment Variables
+
+### UI Environment (.env.local)
+```bash
+OPENAI_API_KEY=your_openai_api_key
+REMOTE_ACTION_URL=http://localhost:8000/copilotkit
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### Agent Environment (.env)
+```bash
+OPENAI_API_KEY=your_openai_api_key
+SERPAPI_API_KEY=your_serpapi_key
+PORT=8000
+```
