@@ -1,5 +1,6 @@
 version = 1
-requires-python = ">=3.9"
+revision = 1
+requires-python = ">=3.9, <4.0"
 resolution-markers = [
     "python_full_version >= '3.12.4'",
     "python_full_version >= '3.12' and python_full_version < '3.12.4'",
@@ -189,7 +190,7 @@ wheels = [
 [[package]]
 name = "blog-post-generator"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "copilotkit" },
     { name = "fastapi" },
@@ -201,6 +202,7 @@ dependencies = [
     { name = "langgraph-cli", extra = ["inmem"] },
     { name = "pydantic" },
     { name = "python-dotenv" },
+    { name = "uvicorn" },
 ]
 
 [package.metadata]
@@ -215,6 +217,7 @@ requires-dist = [
     { name = "langgraph-cli", extras = ["inmem"], specifier = ">=0.1.71" },
     { name = "pydantic" },
     { name = "python-dotenv" },
+    { name = "uvicorn", specifier = ">=0.29.0" },
 ]
 
 [[package]]
@@ -970,7 +973,7 @@ wheels = [
 
 [package.optional-dependencies]
 inmem = [
-    { name = "langgraph-api", marker = "python_full_version >= '3.11' and python_full_version < '4.0'" },
+    { name = "langgraph-api", marker = "python_full_version >= '3.11'" },
     { name = "python-dotenv" },
 ]
 
@@ -1996,8 +1999,9 @@ name = "uvicorn"
 version = "0.34.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "click", marker = "python_full_version >= '3.11'" },
-    { name = "h11", marker = "python_full_version >= '3.11'" },
+    { name = "click" },
+    { name = "h11" },
+    { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/4b/4d/938bd85e5bf2edeec766267a5015ad969730bb91e31b44021dfe8b22df6c/uvicorn-0.34.0.tar.gz", hash = "sha256:404051050cd7e905de2c9a7e61790943440b3416f49cb409f965d9dcd0fa73e9", size = 76568 }
 wheels = [

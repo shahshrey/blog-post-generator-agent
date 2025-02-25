@@ -6,6 +6,28 @@ authors = ["shrey shah <sshreyv@gmail.com>"]
 license = "MIT"
 packages = [{include = "src"}]
 
+[project]
+name = "blog-post-generator"
+version = "0.1.0"
+description = "A blog post generator"
+authors = [
+    {name = "shrey shah", email = "sshreyv@gmail.com"}
+]
+requires-python = ">=3.9,<4.0"
+dependencies = [
+    "python-dotenv",
+    "langchain-core",
+    "langchain-openai",
+    "langgraph>=0.2.39",
+    "langgraph-checkpoint>=2.0.2",
+    "langgraph-checkpoint-postgres>=2.0.2",
+    "pydantic",
+    "langgraph-cli[inmem]>=0.1.71",
+    "fastapi>=0.115.8",
+    "copilotkit>=0.1.38",
+    "uvicorn>=0.29.0",
+]
+
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
 python-dotenv = "*"
@@ -19,6 +41,7 @@ langgraph-cli = {extras = ["inmem"], version = ">=0.1.71"}
 fastapi = ">=0.115.8"
 copilotkit = ">=0.1.38"
 uvicorn = ">=0.29.0"
+
 [tool.poetry.scripts]
 app = "src.app:main"
 

@@ -73,7 +73,7 @@ stateDiagram-v2
 1. Clone the repo and Navigate to the UI directory:
    ```bash
    git clone git@github.com:shahshrey/blog-post-generator-agent.git
-   cd ui
+   cd blog-post-generator-agent/ui
    ```
 
 2. Install dependencies:
